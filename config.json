@@ -1,0 +1,6 @@
+{
+    "config":[
+        {"id":1,"name":"内网", "ip":"192.168.1.9", "port":22, "path":"/tmp/", "user":"root", "passwd":"zlwar!#%&"}
+        , {"id":2, "name":"内网雅乐", "ip":"192.168.1.9", "port":22, "path":"/data/ship/trunk/Debugpath/Config/", "user":"root", "passwd":"zlwar!#%&"}
+]
+}
