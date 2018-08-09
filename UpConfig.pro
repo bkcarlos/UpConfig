@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets QT+= NetWork
 
 TARGET = UpConfig
 TEMPLATE = app
@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         upconfig.cpp \
-    QReadJsonConfig.cpp
+    QReadJsonConfig.cpp \
+    Libssh2UpFile.cpp
 
 HEADERS += \
         upconfig.h \
-    QReadJsonConfig.h
+    QReadJsonConfig.h \
+    Libssh2UpFile.h \
 
 FORMS += \
         upconfig.ui

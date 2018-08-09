@@ -2,6 +2,7 @@
 #include "ui_upconfig.h"
 #include "QReadJsonConfig.h"
 #include "Libssh2UpFile.h"
+#include "Libssh2Exec.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -149,7 +150,7 @@ void UpConfig::InitConnects()
 void UpConfig::OnClickSelectFiles()
 {
     QFileDialog* pFileDiglogSelectFiles = new QFileDialog(this);
-    pFileDiglogSelectFiles->setWindowTitle(QString::fromLocal8Bit("请选择需要生成的文件"));
+    pFileDiglogSelectFiles->setWindowTitle(QString::fromLocal8Bit("请选择需要上传的文件"));
     pFileDiglogSelectFiles->setDirectory(".");
     pFileDiglogSelectFiles->setViewMode(QFileDialog::List);
     pFileDiglogSelectFiles->setNameFilter("txt files(*.txt)");
@@ -180,17 +181,59 @@ void UpConfig::OnClickUpFilesButton()
         return;
     }
 
+    bool bUpOk = false;
     Libssh2UpFile upFiles(pConfig->ip, pConfig->port, pConfig->user, pConfig->passwd);
     for (int i = 0; i < m_pListWidget->count(); ++i)
     {
         QListWidgetItem* pListWidgetItem = m_pListWidget->item(i);
         QString filePath = pListWidgetItem->text();
-        upFiles.UpFile(filePath, pConfig->path);
+
+        bUpOk = upFiles.UpFile(filePath, pConfig->path);
+        if (!bUpOk)
+        {
+            break;
+        }
+    }
+
+    if (bUpOk)
+    {
+        QMessageBox::information(this, QString::fromLocal8Bit("上传"), QString::fromLocal8Bit("文件上传完成！"));
+        ControlSetEnbale(m_pUpFileButton, false);
+        ControlSetEnbale(m_pSelComboBox, false);
+        ControlSetEnbale(m_pReloadConfig, true);
+    }
+    else
+    {
+        QMessageBox::information(this, QString::fromLocal8Bit("上传"), QString::fromLocal8Bit("文件上传失败！"));
     }
 }
 
 void UpConfig::OnClickReloadConfig()
 {
+    const Config* pConfig = QReadJsonConfig::GetInstance()->GetJsonConfig(m_nSelIndex);
+    if (nullptr == pConfig)
+    {
+        return;
+    }
+
+    QString strReloadPath(pConfig->path);
+    if (strReloadPath.at(strReloadPath.size() - 1) != '/')
+    {
+        strReloadPath += '/';
+    }
+
+    strReloadPath += "../reload";
+    Libssh2Exec exec(pConfig->ip, pConfig->port, pConfig->user, pConfig->passwd);
+
+    bool bReload = exec.Exec(strReloadPath);
+    if (bReload)
+    {
+        QMessageBox::information(this, QString::fromLocal8Bit("加载"), QString::fromLocal8Bit("加载文件成功！"));
+    }
+    else
+    {
+        QMessageBox::information(this, QString::fromLocal8Bit("加载"), QString::fromLocal8Bit("加载文件失败！"));
+    }
 }
 
 void UpConfig::OnSelectComBox(int nIndex)

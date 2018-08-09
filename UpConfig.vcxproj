@@ -339,6 +339,7 @@
     </QtUic>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Libssh2Exec.cpp" />
     <ClCompile Include="Libssh2UpFile.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="QReadJsonConfig.cpp" />
@@ -375,6 +376,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </CustomBuild>
+    <ClInclude Include="Libssh2Exec.h" />
     <ClInclude Include="Libssh2UpFile.h" />
     <ClInclude Include="QReadJsonConfig.h" />
     <ClInclude Include="ui_upconfig.h" />
